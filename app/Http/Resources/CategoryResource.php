@@ -22,8 +22,6 @@ class CategoryResource extends JsonResource
             'meta_title' => $this->meta_title,
             'meta_description' => $this->meta_description,
             'meta_keywords' => $this->meta_keywords,
-            
-            // Relationship data
             'parent' => $this->whenLoaded('parent', function () {
                 return [
                     'id' => $this->parent->id,
@@ -31,7 +29,7 @@ class CategoryResource extends JsonResource
                     'slug' => $this->parent->slug,
                 ];
             }),
-            
+
             'children' => $this->whenLoaded('children', function () {
                 return $this->children->map(function ($child) {
                     return [
@@ -41,16 +39,14 @@ class CategoryResource extends JsonResource
                     ];
                 });
             }),
-            
-            // Timestamps
+
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
-            
-            // Additional computed fields
+
             'full_path' => $this->when($this->parent, function () {
                 return $this->parent ? $this->parent->name . ' > ' . $this->name : $this->name;
             }),
-            
+
             'is_active' => $this->status === 'active',
             'has_children' => $this->whenLoaded('children', function () {
                 return $this->children->count() > 0;

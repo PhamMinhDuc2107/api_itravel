@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 class BaseApiController extends BaseController
 {
   /**
-   * Lấy số lượng bản ghi mỗi trang từ request
+   * get record page
    */
   protected function getPerPage(Request $request): int
   {
@@ -20,7 +20,7 @@ class BaseApiController extends BaseController
   }
 
   /**
-   * Lấy cột sắp xếp từ request
+   * get column sort
    */
   protected function getSortBy(Request $request): string
   {
@@ -28,7 +28,7 @@ class BaseApiController extends BaseController
   }
 
   /**
-   * Lấy thứ tự sắp xếp từ request
+   * Get sort column from the request
    */
   protected function getSortOrder(Request $request): string
   {

@@ -39,7 +39,7 @@ class AuthController extends Controller
             $validated = $request->validated();
             $email = $validated['email'];
             $password = $validated['password'];
-
+            $remember = $validated['remember_me'];
             $recentFailedAttempts = LoginAttempt::where('email', $email)
                 ->where('successful', false)
                 ->where('attempted_at', '>=', Carbon::now()->subMinutes(15))
@@ -64,17 +64,17 @@ class AuthController extends Controller
 
             LoginAttempt::logAttempt($email, $request, true);
 
-            $token = $user->createToken('admin-token', ['*'], Carbon::now()->addDays(7))->plainTextToken;
-                
+            $expiresAt = $remember ? now()->addDays(7) : now()->addHours(2);
+            $cookieMinutes = $remember ? (60 * 24 * 7) : 120;
+
+            $token = $user->createToken('admin-token', ['*'], $expiresAt)->plainTextToken;
+            $user['access_token'] = $token;
             return response()->success([
                 'user' => $user,
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-                'expires_at' => Carbon::now()->addDays(7)->toISOString()
             ], 'Đăng nhập thành công');
         } catch (\Exception $e) {
             LoginAttempt::logAttempt($request->input('email'), $request, false, 'Server error');
-            return response()->error('Lỗi server, vui lòng thử lại', 500);
+            return response()->error('Lỗi server, vui lòng thử lại ', 500);
         }
     }
 
@@ -83,7 +83,7 @@ class AuthController extends Controller
         try {
             $user = $request->user();
             $user->currentAccessToken()->delete();
-            
+
             return response()->deleted('Đăng xuất thành công');
         } catch (\Exception $e) {
             return response()->error('Lỗi khi đăng xuất: ' . $e->getMessage(), 500);

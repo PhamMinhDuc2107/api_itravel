@@ -1,93 +1,59 @@
 <?php
 
-    namespace App\Http\Controllers\api\v1;
+    namespace App\Http\Controllers\Api\V1;
 
     use App\Http\Controllers\Controller;
     use Illuminate\Http\Request;
-    use App\Models\Admin;
+    use App\Http\Requests\Admin\AdminStoreRequest;
+    use App\Http\Requests\Admin\AdminUpdateRequest;
+    use App\Services\Admin\AdminService;
 
     class AdminController extends Controller
     {
+        protected AdminService $adminService;
+
+        public function __construct(AdminService $adminService)
+        {
+            $this->adminService = $adminService;
+        }
+
         /**
-         * Lấy danh sách tất cả admin (cần permission: view_admins)
+         * GET /admins
          */
         public function index()
         {
-            $admins = Admin::with(['roles', 'permissions'])->get();
-            return response()->success($admins, 'Lấy danh sách admin thành công');
+            return $this->adminService->index();
         }
 
         /**
-         * Tạo admin mới (cần permission: create_admins)
+         * POST /admins
          */
-        public function store(Request $request)
+        public function store(AdminStoreRequest $request)
         {
-            $validated = $request->validate([
-                'name'     => 'required|string|max:255',
-                'email'    => 'required|email|unique:admins,email',
-                'password' => 'required|string|min:8',
-            ]);
-
-            $admin = Admin::create([
-                'name'     => $validated['name'],
-                'email'    => $validated['email'],
-                'password' => bcrypt($validated['password']),
-                'status' => Admin::ADMIN_STATUS_INACTIVE,
-            ]);
-
-            return response()->created($admin, 'Tạo admin thành công');
+            return $this->adminService->store($request->validated());
         }
 
         /**
-         * Cập nhật admin (cần permission: edit_admins)
+         * PUT /admins/{id}
          */
-        public function update(Request $request, $id)
+        public function update(AdminUpdateRequest $request, int $id)
         {
-            $admin = Admin::find($id);
-            if (!$admin) {
-                return response()->notFound('Không tìm thấy admin');
-            }
-
-            $validated = $request->validate([
-                'name'  => 'sometimes|string|max:255',
-                'email' => 'sometimes|email|unique:admins,email,' . $id,
-            ]);
-
-            $admin->update($validated);
-
-            return response()->updated($admin, 'Cập nhật admin thành công');
+            return $this->adminService->update($request->validated(), $id);
         }
 
         /**
-         * Xóa admin (cần permission: delete_admins)
+         * DELETE /admins/{id}
          */
-        public function destroy($id)
+        public function destroy(int $id)
         {
-            $admin = Admin::find($id);
-            if (!$admin) {
-                return response()->notFound('Không tìm thấy admin');
-            }
-
-            $admin->delete();
-
-            return response()->deleted('Xóa admin thành công');
+            return $this->adminService->destroy($id);
         }
 
         /**
-         * Kiểm tra quyền của user hiện tại
+         * GET /admins/check-permissions
          */
         public function checkPermissions(Request $request)
         {
-            $user = $request->user();
-
-            return response()->success([
-                'user'              => $user,
-                'roles'             => $user->roles,
-                'permissions'       => $user->getAllPermissions(),
-                'can_view_admins'   => $user->can('view_admins'),
-                'can_create_admins' => $user->can('create_admins'),
-                'can_edit_admins'   => $user->can('edit_admins'),
-                'can_delete_admins' => $user->can('delete_admins'),
-            ], 'Thông tin quyền truy cập');
+            return $this->adminService->checkPermissions($request->user());
         }
     }

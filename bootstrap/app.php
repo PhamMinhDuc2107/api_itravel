@@ -22,4 +22,5 @@
         })
         ->withProviders([
             App\Providers\MacroServiceProvider::class,
+            App\Providers\AppServiceProvider::class,
         ])->create();

@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+
 use Illuminate\Support\ServiceProvider;
 use App\Macros\ResponseMacro;
-
+use App\Repositories\Contracts\AdminRepositoryInterface;
+use App\Repositories\Eloquent\AdminRepository;
+use App\Repositories\Contracts\CategoryRepositoryInterface;
+use App\Repositories\Eloquent\CategoryRepository;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -20,7 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        ResponseMacro::register();
+        $this->app->bind(AdminRepositoryInterface::class, AdminRepository::class);
+        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
         //
     }
 }

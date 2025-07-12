@@ -11,7 +11,8 @@ use Illuminate\Support\Carbon;
 class Admin extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
+    public const ADMIN_STATUS_INACTIVE = '1';
+    public const ADMIN_STATUS_ACTIVE   = '2';
     protected $fillable = [
         'name',
         'email',

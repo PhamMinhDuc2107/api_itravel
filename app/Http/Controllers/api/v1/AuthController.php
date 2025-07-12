@@ -57,7 +57,7 @@ class AuthController extends Controller
                 return response()->unauthorized('Sai tài khoản hoặc mật khẩu');
             }
 
-            if ($user->status !== "2") {
+            if ($user->status !== Admin::ADMIN_STATUS_ACTIVE) {
                 LoginAttempt::logAttempt($email, $request, false, 'Account not activated');
                 return response()->unauthorized('Tài khoản chưa được kích hoạt');
             }

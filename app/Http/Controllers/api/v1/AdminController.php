@@ -32,6 +32,7 @@
                 'name'     => $validated['name'],
                 'email'    => $validated['email'],
                 'password' => bcrypt($validated['password']),
+                'status' => Admin::ADMIN_STATUS_INACTIVE,
             ]);
 
             return response()->created($admin, 'Tạo admin thành công');

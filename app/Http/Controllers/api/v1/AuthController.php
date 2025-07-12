@@ -31,10 +31,4 @@
         {
             return $this->authService->logout($request->user());
         }
-
-        public function getLoginAttempts(Request $request)
-        {
-            return $this->authService->getLoginAttempts($request->user());
-        }
-
     }

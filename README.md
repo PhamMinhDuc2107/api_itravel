@@ -1,16 +1,20 @@
 api_itravel/
 ├── app/
+│   ├── Enums/
+│   │   └── AdminStatus.php
 │   ├── Http/
 │   │   ├── Controllers/
 │   │   │   ├── api/
 │   │   │   │   ├── v1/
-│   │   │   │   │   ├── AdminController.php
-│   │   │   │   │   ├── AuthController.php
-│   │   │   │   │   └── CategoryController.php
-│   │   │   │   └── BaseApiController.php
+│   │   │   │       ├── AdminController.php
+│   │   │   │       ├── AuthController.php
+│   │   │   │       └── CategoryController.php
 │   │   │   └── Controller.php
 │   │   ├── Middleware/
 │   │   ├── Requests/
+│   │   │   ├── Admin/
+│   │   │   │   ├── AdminStoreRequest.php
+│   │   │   │   └── AdminUpdateRequest.php
 │   │   │   ├── Auth/
 │   │   │   │   ├── LoginRequest.php
 │   │   │   │   └── RegisterRequest.php
@@ -25,11 +29,24 @@ api_itravel/
 │   │   │   ├── Admin.php
 │   │   │   └── LoginAttempt.php
 │   │   ├── Category/
-│   │   │   └── Category.php
-│   │   └── Admin.php
+│   │       └── Category.php
 │   ├── Providers/
-│       ├── AppServiceProvider.php
-│       └── MacroServiceProvider.php
+│   │   ├── AppServiceProvider.php
+│   │   └── MacroServiceProvider.php
+│   ├── Repositories/
+│   │   ├── Contracts/
+│   │   │   ├── AdminRepositoryInterface.php
+│   │   │   └── CategoryRepositoryInterface.php
+│   │   ├── Eloquent/
+│   │       ├── AdminRepository.php
+│   │       └── CategoryRepository.php
+│   ├── Services/
+│       ├── Admin/
+│       │   └── AdminService.php
+│       ├── Auth/
+│       │   └── AuthService.php
+│       ├── Category/
+│           └── CategoryService.php
 ├── bootstrap/
 │   ├── cache/
 │   │   ├── packages.php
@@ -120,8 +137,6 @@ api_itravel/
 ├── artisan
 ├── composer.json
 ├── composer.lock
-├── db_itravel
 ├── package.json
 ├── phpunit.xml
-├── structure.md
 └── vite.config.js

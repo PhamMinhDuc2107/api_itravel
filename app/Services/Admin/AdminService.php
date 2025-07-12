@@ -2,6 +2,7 @@
 
     namespace App\Services\Admin;
 
+    use App\Enums\AdminStatus;
     use App\Models\Admin;
     use App\Repositories\Contracts\AdminRepositoryInterface;
 
@@ -34,7 +35,7 @@
         {
             try {
                 $data['password'] = bcrypt($data['password']);
-                $data['status'] = Admin::ADMIN_STATUS_INACTIVE;
+                $data['status'] = AdminStatus::INACTIVE;
 
                 $admin = $this->adminRepo->create($data);
                 return response()->created($admin, 'Tạo admin thành công');

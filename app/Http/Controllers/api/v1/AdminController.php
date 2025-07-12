@@ -48,12 +48,4 @@
         {
             return $this->adminService->destroy($id);
         }
-
-        /**
-         * GET /admins/check-permissions
-         */
-        public function checkPermissions(Request $request)
-        {
-            return $this->adminService->checkPermissions($request->user());
-        }
     }
